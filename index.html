@@ -117,7 +117,7 @@
 
 <footer>
     <input id="msg" placeholder="Type a message">
-    <button onclick="send()">Send</button>
+    <button onclick="send()" id="button">Send</button>
 </footer>
 
 <script>
@@ -246,6 +246,12 @@ async function send() {
     logMessage(text, "self");
     input.value = "";
 }
+
+window.addEventalistener("keydown",e => {
+    if (e.key == "Enter") {
+        send()
+    }
+})
 </script>
 
 </body>
