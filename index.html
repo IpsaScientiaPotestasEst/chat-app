@@ -121,26 +121,19 @@
 </footer>
 
 <script>
-
-
 const PASSWORD = "SuperSecretPassword123";
 const SALT = "fixed-salt";
 
-function strToBuf(str) {
-    return new TextEncoder().encode(str);
-}
+let myId = crypto.randomUUID();
+let socket;
+let heartbeat;
 
-function bufToStr(buf) {
-    return new TextDecoder().decode(buf);
-}
+function strToBuf(str) { return new TextEncoder().encode(str); }
+function bufToStr(buf) { return new TextDecoder().decode(buf); }
 
 async function getKey() {
     const baseKey = await crypto.subtle.importKey(
-        "raw",
-        strToBuf(PASSWORD),
-        "PBKDF2",
-        false,
-        ["deriveKey"]
+        "raw", strToBuf(PASSWORD), "PBKDF2", false, ["deriveKey"]
     );
 
     return crypto.subtle.deriveKey(
@@ -190,9 +183,6 @@ async function decryptMessage(base64) {
     return bufToStr(plaintext);
 }
 
-let socket;
-let heartbeat;
-
 function logMessage(text, type = "system") {
     const log = document.getElementById("log");
     const div = document.createElement("div");
@@ -210,9 +200,7 @@ function start() {
         logMessage("Connected to server", "system");
 
         heartbeat = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send("ping");
-            }
+            if (socket.readyState === WebSocket.OPEN) socket.send("ping");
         }, 30000);
     };
 
@@ -221,7 +209,11 @@ function start() {
 
         try {
             const decrypted = await decryptMessage(event.data);
-            logMessage(decrypted, "server");
+            const data = JSON.parse(decrypted);
+
+            if (data.id === myId) return;
+
+            logMessage(data.text, "server");
         } catch {
             logMessage("Failed to decrypt message", "system");
         }
@@ -242,7 +234,9 @@ async function send() {
     const text = input.value.trim();
     if (!text || socket.readyState !== WebSocket.OPEN) return;
 
-    const encrypted = await encryptMessage(text);
+    const payload = JSON.stringify({ id: myId, text });
+    const encrypted = await encryptMessage(payload);
+
     socket.send(encrypted);
 
     logMessage(text, "self");
