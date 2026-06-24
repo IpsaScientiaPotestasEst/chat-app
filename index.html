@@ -210,7 +210,7 @@ async function start() {
     socket = new WebSocket("wss://chat-server-r42a.onrender.com"); // adjust host if needed
 
     socket.onopen = () => {
-        document.getElementById("status").textContent = "Connected";
+        document.getElementById("status").textContent = "🟢 Connected";
         logMessage("Connected to server", "system");
     };
 
@@ -224,7 +224,7 @@ async function start() {
     };
 
     socket.onclose = () => {
-        document.getElementById("status").textContent = "Disconnected";
+        document.getElementById("status").textContent = "🔴 Disconnected";
         logMessage("Disconnected from server", "system");
     };
 }
