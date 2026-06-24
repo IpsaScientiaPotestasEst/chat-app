@@ -247,7 +247,7 @@ async function send() {
     input.value = "";
 }
 
-window.addEventalistener("keydown",e => {
+window.addEventListener("keydown",function(e){
     if (e.key == "Enter") {
         send()
     }
