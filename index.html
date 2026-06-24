@@ -16,20 +16,43 @@
         height: 100vh;
     }
 
+header {
+    padding: 10px;
+    background: #1a1a1a;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#right-side {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* space between E2EE and status */
+}
+
+#status, #etee {
+    font-size: 14px;
+    color: #888;
+}
+
+/* MOBILE FIX */
+@media (max-width: 480px) {
     header {
-        padding: 10px;
-        background: #1a1a1a;
-        font-size: 20px;
-        font-weight: bold;
-        border-bottom: 2px solid #333;
-        display: flex;
-        justify-content: space-between;
+        font-size: 16px;
     }
 
-    #status {
-        font-size: 14px;
-        color: #888;
+    #right-side {
+        gap: 4px;
     }
+
+    #status, #etee {
+        font-size: 12px;
+        white-space: nowrap; /* prevent wrapping */
+    }
+}
 
     #log {
         flex: 1;
@@ -113,9 +136,12 @@
 <body>
 
 <header>
-    Maximum Chat
-    <span id="etee">End-to-end Encypted</span>
-    <span id="status">Connecting...</span>
+    <span id="title">Maximum Chat</span>
+
+    <div id="right-side">
+        <span id="etee">End-to-end Encrypted</span>
+        <span id="status">Connecting...</span>
+    </div>
 </header>
 
 <div id="log"></div>
