@@ -207,7 +207,7 @@ function logMessage(text, type = "system") {
 }
 
 async function start() {
-    socket = new WebSocket("wss://chat-server-r42a.onrender.com"); // adjust host if needed
+    socket = new WebSocket("wss://chat-server-r42a.onrender.com:PORT+1"); // adjust host if needed
 
     socket.onopen = () => {
         document.getElementById("status").textContent = "🟢 Connected";
