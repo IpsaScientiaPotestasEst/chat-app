@@ -8,10 +8,12 @@
 <style>
     body {
         margin: 0;
-        padding: 0;
-        background: #0d0d0d;
-        color: white;
+        background: #0f0f0f;
+        color: #e0e0e0;
         font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
     }
 
     header {
@@ -21,63 +23,85 @@
         font-weight: bold;
         border-bottom: 2px solid #333;
 
+        /* NEW: three‑column layout */
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
+    /* NEW: header sections */
     header .left {
-        text-align: left;
         flex: 1;
+        text-align: left;
     }
 
     header .center {
-        text-align: center;
         flex: 1;
+        text-align: center;
     }
 
     header .right {
-        text-align: right;
         flex: 1;
+        text-align: right;
+    }
+
+    #status {
         font-size: 14px;
         color: #888;
     }
 
     #log {
-        height: calc(100vh - 160px);
+        flex: 1;
+        padding: 15px;
         overflow-y: auto;
-        padding: 20px;
+        white-space: pre-wrap;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
     .msg {
-        margin-bottom: 15px;
-        padding: 10px 15px;
-        border-radius: 10px;
-        max-width: 70%;
-        line-height: 1.4;
-    }
-
-    .self {
-        background: #4a4a4a;
-        margin-left: auto;
+        padding: 10px 14px;
+        background: #1e1e1e;
+        border-radius: 8px;
+        animation: fadeIn 0.2s ease-out;
+        max-width: 80%;
+        word-wrap: break-word;
     }
 
     .server {
         background: #2a2a2a;
-        border-left: 4px solid #9b59b6;
+        border-left: 4px solid #4caf50;
+    }
+
+    .self {
+        background: #2a2a2a;
+        border-left: 4px solid #2196f3;
+        align-self: flex-end;
+    }
+
+    .system {
+        background: #2a2a2a;
+        border-left: 4px solid #b347ff;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
 
     footer {
-        display: flex;
-        padding: 15px;
+        padding: 10px;
         background: #1a1a1a;
+        display: flex;
+        gap: 10px;
         border-top: 2px solid #333;
     }
 
-    #msg {
+    input {
         flex: 1;
         padding: 10px;
-        border-radius: 5px;
+        border-radius: 6px;
         border: none;
         outline: none;
         background: #2a2a2a;
@@ -85,19 +109,18 @@
         font-size: 16px;
     }
 
-    #button {
-        margin-left: 10px;
+    button {
         padding: 10px 20px;
-        background: #9b59b6;
+        background: #4caf50;
         border: none;
-        border-radius: 5px;
+        border-radius: 6px;
         color: white;
         font-size: 16px;
         cursor: pointer;
     }
 
-    #button:hover {
-        background: #b07ad1;
+    button:hover {
+        background: #45a049;
     }
 </style>
 
