@@ -1,276 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Maximum Chat</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="AnSVG.svg">
+    <meta charset="UTF-8">
+    <title>Maximum Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    body {
-        margin: 0;
-        background: #0f0f0f;
-        color: #e0e0e0;
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-    }
+    <style>
+        body {
+            margin: 0;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
-    header {
-        padding: 15px;
-        background: #1a1a1a;
-        font-size: 20px;
-        font-weight: bold;
-        border-bottom: 2px solid #333;
+        header {
+            padding: 15px;
+            background: #1a1a1a;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-        /* NEW: three‑column layout */
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
 
-    /* NEW: header sections */
-    header .left {
-        flex: 1;
-        text-align: left;
-    }
+        header .left {
+            flex: 1;
+            text-align: left;
+        }
 
-    header .center {
-        flex: 1;
-        text-align: center;
-        font-size: 14px;
-        color: #888;
-       
-    }
+        header .center {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
 
-    header .right {
-        flex: 1;
-        text-align: right;
-    }
+        }
 
-    #status {
-        font-size: 14px;
-        color: #888;
-    }
+        header .right {
+            flex: 1;
+            text-align: right;
+        }
 
-    #log {
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-        white-space: pre-wrap;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+        #status {
+            font-size: 14px;
+            color: #888;
+        }
 
-    .msg {
-        padding: 10px 14px;
-        background: #1e1e1e;
-        border-radius: 8px;
-        animation: fadeIn 0.2s ease-out;
-        max-width: 80%;
-        word-wrap: break-word;
-    }
+        #log {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-    .server {
-        background: #2a2a2a;
-        border-left: 4px solid #4caf50;
-    }
+        .msg {
+            padding: 10px 14px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            animation: fadeIn 0.2s ease-out;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
 
-    .self {
-        background: #2a2a2a;
-        border-left: 4px solid #2196f3;
-        align-self: flex-end;
-    }
+        .server {
+            background: #2a2a2a;
+            border-left: 4px solid #4caf50;
+        }
 
-    .system {
-        background: #2a2a2a;
-        border-left: 4px solid #b347ff;
-    }
+        .self {
+            background: #2a2a2a;
+            border-left: 4px solid #2196f3;
+            align-self: flex-end;
+        }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(5px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
+        .system {
+            background: #2a2a2a;
+            border-left: 4px solid #b347ff;
+        }
 
-    footer {
-        padding: 10px;
-        background: #1a1a1a;
-        display: flex;
-        gap: 10px;
-        border-top: 2px solid #333;
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
 
-    input {
-        flex: 1;
-        padding: 10px;
-        border-radius: 6px;
-        border: none;
-        outline: none;
-        background: #2a2a2a;
-        color: white;
-        font-size: 16px;
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    button {
-        padding: 10px 20px;
-        background: #4caf50;
-        border: none;
-        border-radius: 6px;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-    }
+        footer {
+            padding: 10px;
+            background: #1a1a1a;
+            display: flex;
+            gap: 10px;
+            border-top: 2px solid #333;
+        }
 
-    button:hover {
-        background: #45a049;
-    }
-</style>
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+            background: #2a2a2a;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #4caf50;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #login {
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 100vw;
+            height: 100vh;
+
+            background-color: rgba(77, 75, 75, 0.932);
+            z-index: 999999;
+
+            text-align: center;
+
+            gap: 25px;
+        }
+
+        #login-header {
+            font-size: 48px;
+            font-weight: 700;
+            color: #111;
+            letter-spacing: 1px;
+        }
+
+        #login-input {
+            width: 500px;
+            height: 10px;
+
+            display: inline-block;
+            font-size: 20px;
+
+            border-radius: 8px;
+            border: 2px solid #222;
+
+            background-color: #000;
+            color: white;
+
+            transition: 0.2s ease;
+        }
+
+        #login-input:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+
+        }
+    </style>
 
 </head>
+
 <body>
 
-<header>
-    <div class="left">Maximum Chat</div>
-    <div class="center">End-to-end Encrypted</div>
-    <div class="right" id="status">Connecting...</div>
-</header>
+    <header>
+        <div class="left">Maximum Chat</div>
+        <div class="center">End-to-end Encrypted</div>
+        <div class="right" id="status">Connecting...</div>
+    </header>
 
-<div id="log"></div>
 
-<footer>
-    <input id="msg" placeholder="Type a message">
-    <button onclick="send()" id="button">Send</button>
-</footer>
 
-<script>
-const PASSWORD = "SuperSecretPassword123";
-const SALT = "fixed-salt";
+    <div id="log"></div>
 
-let myId = crypto.randomUUID();
-let socket;
-let heartbeat;
+    <div id="login">
+        <h2 id="login-header">Login</h2>
 
-function strToBuf(str) { return new TextEncoder().encode(str); }
-function bufToStr(buf) { return new TextDecoder().decode(buf); }
+        <br>
 
-async function getKey() {
-    const baseKey = await crypto.subtle.importKey(
-        "raw", strToBuf(PASSWORD), "PBKDF2", false, ["deriveKey"]
-    );
+        <input id="login-input" type="input" placeholder="Enter a username:">
+    </div>
 
-    return crypto.subtle.deriveKey(
-        {
-            name: "PBKDF2",
-            salt: strToBuf(SALT),
-            iterations: 100000,
-            hash: "SHA-256"
-        },
-        baseKey,
-        { name: "AES-GCM", length: 256 },
-        false,
-        ["encrypt", "decrypt"]
-    );
-}
 
-async function encryptMessage(text) {
-    const key = await getKey();
-    const iv = crypto.getRandomValues(new Uint8Array(12));
 
-    const ciphertext = await crypto.subtle.encrypt(
-        { name: "AES-GCM", iv },
-        key,
-        strToBuf(text)
-    );
 
-    const combined = new Uint8Array(iv.byteLength + ciphertext.byteLength);
-    combined.set(iv, 0);
-    combined.set(new Uint8Array(ciphertext), iv.byteLength);
+    <footer>
+        <input id="msg" placeholder="Type a message">
+        <button onclick="send()" id="button">Send</button>
+        <button onclick="resetUsername()" id="click">Username</button>
+    </footer>
 
-    return btoa(String.fromCharCode(...combined));
-}
+    <script>
 
-async function decryptMessage(base64) {
-    const data = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-    const iv = data.slice(0, 12);
-    const ciphertext = data.slice(12);
+        let usernameBtn = document.getElementById("");
 
-    const key = await getKey();
+        let login = document.getElementById("login");
+        let loginInput = document.getElementById("login-input");
 
-    const plaintext = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv },
-        key,
-        ciphertext
-    );
-
-    return bufToStr(plaintext);
-}
-
-function logMessage(text, type = "system") {
-    const log = document.getElementById("log");
-    const div = document.createElement("div");
-    div.className = "msg " + type;
-    div.textContent = text;
-    log.appendChild(div);
-    log.scrollTop = log.scrollHeight;
-}
-
-function start() {
-    socket = new WebSocket("wss://chat-server-r42a.onrender.com");
-
-    socket.onopen = () => {
-        document.getElementById("status").textContent = "🟢 Connected";
-        logMessage("Connected to server", "system");
-
-        heartbeat = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) socket.send("ping");
-        }, 30000);
-    };
-
-    socket.onmessage = async (event) => {
-        if (event.data === "pong") return;
-
-        try {
-            const decrypted = await decryptMessage(event.data);
-            const data = JSON.parse(decrypted);
-
-            if (data.id === myId) return;
-
-            logMessage(data.text, "server");
-        } catch {
-            logMessage("Failed to decrypt message", "system");
+        function resetUsername() {
+            localStorage.removeItem("login-done");
+            login.style.display = "block";
+            loginInput.focus();
+            window.location.reload();
         }
-    };
 
-    socket.onclose = () => {
-        clearInterval(heartbeat);
-        document.getElementById("status").textContent = "🔴 Disconnected";
-        logMessage("Disconnected — retrying in 3s", "system");
-        setTimeout(start, 3000);
-    };
-}
+        function showError() {
+            let existing = document.getElementById("login-error");
+            if (existing) return;
 
-start();
+            let div = document.createElement("div");
+            div.id = "login-error";
+            div.textContent = "Please enter a valid input";
 
-async function send() {
-    const input = document.getElementById("msg");
-    const text = input.value.trim();
-    if (!text || socket.readyState !== WebSocket.OPEN) return;
+            div.style.margin = "20px auto";
+            div.style.textAlign = "center";
+            div.style.color = "black";
+            div.style.backgroundColor = "red";
+            div.style.borderRadius = "10px";
+            div.style.width = "50%";
+            div.style.height = "50px";
+            div.style.border = "5px solid black";
+            div.style.padding = "5px";
+            div.style.fontSize = "35px";
+            div.style.fontWeight = "bold";
 
-    const payload = JSON.stringify({ id: myId, text });
-    const encrypted = await encryptMessage(payload);
+            login.appendChild(div);
+        }
 
-    socket.send(encrypted);
+        let inputValue = document.getElementById("login-input").value;
 
-    logMessage(text, "self");
-    input.value = "";
-}
+        window.onload = loginInput.focus();
 
-window.addEventListener("keydown", e => {
-    if (e.key === "Enter") send();
-});
-</script>
+        function doUsername() {
+
+            loginInput.addEventListener("keydown", function (e) {
+
+                if (e.key === "Enter") {
+                    let inputValue = loginInput.value.trim();
+
+                    if (inputValue !== "") {
+
+                        localStorage.setItem("username", inputValue);
+                        localStorage.setItem("login-done", "true");
+
+                        loginInput.value = "";
+                        login.style.display = "none";
+                    }
+                    else {
+                        showError();
+                    }
+                }
+            });
+
+        }
+
+        if (!localStorage.getItem("login-done")) {
+            login.style.display = "block";
+            doUsername();
+        }
+
+        else {
+            login.style.display = "none";
+        }
+
+
+
+        const PASSWORD = "SuperSecretPassword123";
+        const SALT = "fixed-salt";
+
+        let myId = crypto.randomUUID();
+        let socket;
+        let heartbeat;
+
+        function strToBuf(str) { return new TextEncoder().encode(str); }
+        function bufToStr(buf) { return new TextDecoder().decode(buf); }
+
+        async function getKey() {
+            const baseKey = await crypto.subtle.importKey(
+                "raw", strToBuf(PASSWORD), "PBKDF2", false, ["deriveKey"]
+            );
+
+            return crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: strToBuf(SALT),
+                    iterations: 100000,
+                    hash: "SHA-256"
+                },
+                baseKey,
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptMessage(text) {
+            const key = await getKey();
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+
+            const ciphertext = await crypto.subtle.encrypt(
+                { name: "AES-GCM", iv },
+                key,
+                strToBuf(text)
+            );
+
+            const combined = new Uint8Array(iv.byteLength + ciphertext.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(ciphertext), iv.byteLength);
+
+            return btoa(String.fromCharCode(...combined));
+        }
+
+        async function decryptMessage(base64) {
+            const data = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+            const iv = data.slice(0, 12);
+            const ciphertext = data.slice(12);
+
+            const key = await getKey();
+
+            const plaintext = await crypto.subtle.decrypt(
+                { name: "AES-GCM", iv },
+                key,
+                ciphertext
+            );
+
+            return bufToStr(plaintext);
+        }
+
+        function logMessage(text, type = "system") {
+            const log = document.getElementById("log");
+            const div = document.createElement("div");
+            div.className = "msg " + type;
+            div.textContent = text;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function start() {
+            socket = new WebSocket("wss://chat-server-r42a.onrender.com");
+
+            socket.onopen = () => {
+                document.getElementById("status").textContent = "🟢 Connected";
+                logMessage("Connected to server", "system");
+
+                heartbeat = setInterval(() => {
+                    if (socket.readyState === WebSocket.OPEN) socket.send("ping");
+                }, 30000);
+            };
+
+            socket.onmessage = async (event) => {
+                if (event.data === "pong") return;
+
+                try {
+                    const decrypted = await decryptMessage(event.data);
+                    const data = JSON.parse(decrypted);
+
+                    if (data.id === myId) return;
+
+                    logMessage(data.text, "server");
+                } catch {
+                    logMessage("Failed to decrypt message", "system");
+                }
+            };
+
+            socket.onclose = () => {
+                clearInterval(heartbeat);
+                document.getElementById("status").textContent = "🔴 Disconnected";
+                logMessage("Disconnected — retrying in 3s", "system");
+                setTimeout(start, 3000);
+            };
+        }
+
+        start();
+
+        async function send() {
+            const input = document.getElementById("msg");
+            const text = input.value.trim();
+            if (!text || socket.readyState !== WebSocket.OPEN) return;
+
+
+            let username = localStorage.getItem("username");
+
+
+            let finalText = username ? `${username}: ${text}` : text;
+
+
+            const payload = JSON.stringify({ id: myId, text: finalText });
+            const encrypted = await encryptMessage(payload);
+            socket.send(encrypted);
+
+
+            logMessage(finalText, "self");
+
+            input.value = "";
+        }
+
+        window.addEventListener("keydown", e => {
+            if (e.key === "Enter") send();
+        });
+    </script>
 
 </body>
+
 </html>
