@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +31,6 @@
             align-items: center;
         }
 
-
         header .left {
             flex: 1;
             text-align: left;
@@ -40,7 +41,6 @@
             text-align: center;
             font-size: 14px;
             color: #888;
-
         }
 
         header .right {
@@ -89,15 +89,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(5px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         footer {
@@ -133,52 +126,67 @@
             background: #45a049;
         }
 
+        /* LOGIN SCREEN */
         #login {
             position: fixed;
             top: 0;
             left: 0;
-
             width: 100vw;
             height: 100vh;
-
             background-color: rgba(77, 75, 75, 0.932);
             z-index: 999999;
-
             text-align: center;
-
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             gap: 25px;
+            padding: 20px;
         }
 
         #login-header {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 700;
             color: #111;
             letter-spacing: 1px;
         }
 
         #login-input {
-            width: 500px;
-            height: 10px;
-
-            display: inline-block;
+            width: 90%;
+            max-width: 400px;
+            padding: 12px;
             font-size: 20px;
-
             border-radius: 8px;
             border: 2px solid #222;
-
             background-color: #000;
             color: white;
-
             transition: 0.2s ease;
         }
 
         #login-input:focus {
             border-color: #4caf50;
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
 
+        /* MOBILE FIXES */
+        @media (max-width: 600px) {
+            header {
+                font-size: 18px;
+                padding: 10px;
+            }
+
+            header .center {
+                font-size: 12px;
+            }
+
+            footer {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
-
 </head>
 
 <body>
@@ -189,26 +197,20 @@
         <div class="right" id="status">Connecting...</div>
     </header>
 
-
-
     <div id="log"></div>
 
     <div id="login">
         <h2 id="login-header">Login</h2>
-
-        <br>
-
         <input id="login-input" type="input" placeholder="Enter a username:">
     </div>
-
-
-
 
     <footer>
         <input id="msg" placeholder="Type a message">
         <button onclick="send()" id="button">Send</button>
         <button onclick="resetUsername()" id="click">Username</button>
     </footer>
+
+
 
     <script>
 
