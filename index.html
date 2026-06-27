@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Maximum Chat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="AnSVG.svg">
+
     <style>
         body {
             margin: 0;
@@ -171,77 +171,58 @@
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
         }
 
-         @media (max-width: 600px) {
 
-        #login-input {
-            width: 100px;
-            max-width: 400px;
-            padding: 12px;
-            font-size: 20px;
-            border-radius: 8px;
-            border: 2px solid #222;
-            background-color: #000;
-            color: white;
-            transition: 0.2s ease;
+
+
+        header {
+            padding: 10px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
         }
 
-        #login-input:focus {
-            border-color: #4caf50;
-            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        header .left,
+        header .center,
+        header .right {
+            flex: 1;
         }
 
-             }
+        header .left {
+            text-align: left;
+        }
 
+        header .center {
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-            header {
-                padding: 10px;
-                font-size: 16px;
+        header .right {
+            text-align: right;
+        }
+
+        @media (max-width: 600px) {
+
+            footer {
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 6px;
-                white-space: nowrap;
+                flex-direction: column;
+                gap: 8px;
             }
 
-            header .left,
-            header .center,
-            header .right {
-                flex: 1;
+            footer input {
+                width: 100%;
+                font-size: 16px;
             }
 
-            header .left {
-                text-align: left;
+            footer button {
+                width: 100%;
+                font-size: 16px;
+                padding: 12px;
             }
-
-            header .center {
-                text-align: center;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            header .right {
-                text-align: right;
-            }
-
-            @media (max-width: 600px) {
-
-                footer {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                footer input {
-                    width: 100%;
-                    font-size: 16px;
-                }
-
-                footer button {
-                    width: 100%;
-                    font-size: 16px;
-                    padding: 12px;
-                }
-            }
+        }
     </style>
 
 </head>
@@ -318,25 +299,32 @@
 
         function doUsername() {
 
-            loginInput.addEventListener("keydown", function (e) {
+            function tryLogin() {
+                let inputValue = loginInput.value.trim();
 
-                if (e.key === "Enter") {
-                    let inputValue = loginInput.value.trim();
+                if (inputValue !== "") {
+                    localStorage.setItem("username", inputValue);
+                    localStorage.setItem("login-done", "true");
 
-                    if (inputValue !== "") {
-
-                        localStorage.setItem("username", inputValue);
-                        localStorage.setItem("login-done", "true");
-
-                        loginInput.value = "";
-                        login.style.display = "none";
-                    }
-                    else {
-                        showError();
-                    }
+                    loginInput.value = "";
+                    login.style.display = "none";
+                } else {
+                    showError();
                 }
+            }
+
+
+            loginInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") tryLogin();
             });
 
+
+            loginInput.addEventListener("keyup", function (e) {
+                if (e.key === "Enter") tryLogin();
+            });
+
+
+            loginInput.addEventListener("change", tryLogin);
         }
 
         if (!localStorage.getItem("login-done")) {
