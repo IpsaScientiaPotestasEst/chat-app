@@ -282,6 +282,8 @@
         let login = document.getElementById("login");
         let loginInput = document.getElementById("login-input");
 
+        loginInput.setAttribute("maxlength", "19");
+
         function resetUsername() {
             localStorage.removeItem("login-done");
             login.style.display = "block";
@@ -320,7 +322,7 @@
 
             function tryLogin() {
                 let inputValue = loginInput.value.trim();
-                if (inputValue.length > 19) {showError(); return}
+               
 
                 if (inputValue !== "") {
                     localStorage.setItem("username", inputValue);
