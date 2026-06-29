@@ -141,8 +141,6 @@
             background-color: rgba(77, 75, 75, 0.932);
             z-index: 999999;
             text-align: center;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             gap: 25px;
             padding: 20px;
@@ -157,6 +155,7 @@
 
         #login-input {
             width: 90%;
+            height: 5%;
             max-width: 400px;
             padding: 12px;
             font-size: 20px;
@@ -174,22 +173,22 @@
 
         @media (max-width: 600px) {
 
-        #login-input {
-            width: 200px;
-            max-width: 400px;
-            padding: 12px;
-            font-size: 20px;
-            border-radius: 8px;
-            border: 2px solid #222;
-            background-color: #000;
-            color: white;
-            transition: 0.2s ease;
-        }
+            #login-input {
+                width: 200px;
+                max-width: 400px;
+                padding: 12px;
+                font-size: 20px;
+                border-radius: 8px;
+                border: 2px solid #222;
+                background-color: #000;
+                color: white;
+                transition: 0.2s ease;
+            }
 
-        #login-input:focus {
-            border-color: #4caf50;
-            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
-        }
+            #login-input:focus {
+                border-color: #4caf50;
+                box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+            }
 
         }
 
@@ -273,7 +272,8 @@
     <footer>
         <input id="msg" placeholder="Type a message">
         <button onclick="send()" id="button">Send</button>
-        <button onclick="resetUsername()" id="click">Username</button>
+        <button onclick="resetUsername();
+        loginInput.focus();" id="click">Username</button>
     </footer>
 
     <script>
@@ -282,76 +282,84 @@
         let login = document.getElementById("login");
         let loginInput = document.getElementById("login-input");
 
+        window.onload = function () {
+            loginInput.focus();
+            check();
+            checkInput();
+        };
+
+        function check() {
+            let done = localStorage.getItem("login-done");
+
+            if (done) { login.style.display = "none"; };
+        };
+
+        loginInput.addEventListener("keydown", function (e) {
+
+            if (loginInput.focus && e.key == "Enter") {
+                doUsername();
+            }
+        })
+
         loginInput.setAttribute("maxlength", "19");
 
         function resetUsername() {
-            localStorage.removeItem("login-done");
+            doUsername();
+            checkInput();
             login.style.display = "block";
-            loginInput.focus();
-            window.location.reload();
         }
 
-        function showError() {
-            let existing = document.getElementById("login-error");
-            if (existing) return;
-
-            let div = document.createElement("div");
-            div.id = "login-error";
-            div.textContent = "Please enter a valid input";
-
-            div.style.margin = "20px auto";
-            div.style.textAlign = "center";
-            div.style.color = "black";
-            div.style.backgroundColor = "red";
-            div.style.borderRadius = "10px";
-            div.style.width = "50%";
-            div.style.height = "50px";
-            div.style.border = "5px solid black";
-            div.style.padding = "5px";
-            div.style.fontSize = "35px";
-            div.style.fontWeight = "bold";
-
-            login.appendChild(div);
-        }
-
+        
         let inputValue = document.getElementById("login-input").value;
 
-        window.onload = loginInput.focus();
+
+        function tryLogin() {
+            let inputValue = loginInput.value.trim();
+
+
+            
+            if (inputValue !== "") {
+                localStorage.setItem("username", inputValue);
+                localStorage.setItem("login-done", "true");
+                login.style.display = "none";
+            } 
+        }
 
         function doUsername() {
 
-            function tryLogin() {
-                let inputValue = loginInput.value.trim();
-               
 
-                if (inputValue !== "") {
-                    localStorage.setItem("username", inputValue);
-                    localStorage.setItem("login-done", "true");
+            tryLogin();
 
-                    loginInput.value = "";
-                    login.style.display = "none";
-                }
-                
-                else {
-                    showError();
-                }
-            }
+
+        }
+
+        function checkInput() {
 
 
             loginInput.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") tryLogin();
-        });
+                if (e.key === "Enter") tryLogin();
+            });
+
+            if (!localStorage.getItem("login-done")) {
+                login.style.display = "block";
+                window.onload = doUsername;
+            }
+
+            else {
+                login.style.display = "none";
+            }
+
+        }
 
         if (!localStorage.getItem("login-done")) {
-            login.style.display = "block";
-            doUsername();
-        }
 
-        else {
-            login.style.display = "none";
-        }
+            window.onload = doUsername;
+            window.onload = checkInput;
 
         }
+
+
+
 
         const PASSWORD = "SuperSecretPassword123";
         const SALT = "fixed-salt";
