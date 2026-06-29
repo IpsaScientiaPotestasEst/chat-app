@@ -320,7 +320,7 @@
 
             function tryLogin() {
                 let inputValue = loginInput.value.trim();
-                if (inputValue.length() > 19) {showError()}
+                if (inputValue.length > 19) {showError(); return}
 
                 if (inputValue !== "") {
                     localStorage.setItem("username", inputValue);
