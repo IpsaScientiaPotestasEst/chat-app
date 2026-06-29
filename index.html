@@ -337,17 +337,8 @@
 
 
             loginInput.addEventListener("keydown", function (e) {
-                if (e.key === "Enter") tryLogin();
-            });
-
-
-            loginInput.addEventListener("keyup", function (e) {
-                if (e.key === "Enter") tryLogin();
-            });
-
-
-            loginInput.addEventListener("change", tryLogin);
-        }
+            if (e.key === "Enter") tryLogin();
+        });
 
         if (!localStorage.getItem("login-done")) {
             login.style.display = "block";
@@ -494,7 +485,7 @@
             if (e.key === "Enter") send();
         });
 
-        doUsername()
+
     </script>
 
 </body>
