@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Maximum Chat</title>
+    <title>Maximum Chat v(1.2)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="AnSVG.svg">
 
@@ -456,6 +456,10 @@
                     logMessage(data.text, "server");
                 } catch {
                     logMessage("Failed to decrypt message", "system");
+                }
+
+                if (document.hidden) {
+                    alert("Someone has sent has message! (You might like to check the chat, or close the tab)")
                 }
             };
 
