@@ -141,6 +141,8 @@
             background-color: rgba(77, 75, 75, 0.932);
             z-index: 999999;
             text-align: center;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             gap: 25px;
             padding: 20px;
@@ -155,7 +157,6 @@
 
         #login-input {
             width: 90%;
-            height: 5%;
             max-width: 400px;
             padding: 12px;
             font-size: 20px;
@@ -242,21 +243,6 @@
                 padding: 12px;
             }
         }
-
-        #url {
-            font-size: 22px;
-            color: blue;
-            text-decoration: underline;
-            transition: 0.2s ease;
-        }
-
-        #url:hover {
-            font-size: 22px;
-            color: rgb(255, 8, 255);
-            text-decoration: underline;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
     </style>
 
 </head>
@@ -287,122 +273,117 @@
     <footer>
         <input id="msg" placeholder="Type a message">
         <button onclick="send()" id="button">Send</button>
-        <button onclick="resetUsername();
-        loginInput.focus();" id="click">Username</button>
-        <a onclick="Open()" id="url">Log Info</a>
+        <button onclick="resetUsername()" id="click">Username</button>
     </footer>
 
     <script>
 
-        function Open() {
-            window.open("Log Info.html", "_blank")
+
+
+        function enableNotifications() {
+            if ("Notification" in window && Notification.permission === "default") {
+                Notification.requestPermission();
+            }
         }
 
 
-        async function sendOSNotification(title, options = {}) {
-          
-            if (!("Notification" in window)) {
-                console.error("This browser does not support desktop notifications.");
-                return;
-            }
 
-          
-            if (Notification.permission === "default") {
-                await Notification.requestPermission();
-            }
+        function Notify(msg, other, duration = 5000) {
 
-           
-            if (Notification.permission === "granted") {
-                new Notification(title, {
-                    body: options.body || "",
-                    icon: options.icon || "/favicon.ico", 
-                    tag: options.tag || "global-alert",  
-                    ...options
+            if (document.visibilityState === "hidden" && Notification.permission === "granted") {
+
+
+
+                let note = new Notification(msg, {
+                    body: other,
+                    tag: "ui-update"
                 });
-            } else {
-                console.warn("Notification permission was denied by the user.");
+
+                setTimeout(() => {
+                    note.close();
+                }, duration);
             }
         }
+
+
+        document.addEventListener("click", enableNotifications, { once: true });
+
 
         let login = document.getElementById("login");
         let loginInput = document.getElementById("login-input");
 
-        window.onload = function () {
-            loginInput.focus();
-            check();
-            checkInput();
-        };
-
-        function check() {
-            let done = localStorage.getItem("login-done");
-
-            if (done) { login.style.display = "none"; };
-        };
-
-        loginInput.addEventListener("keydown", function (e) {
-
-            if (loginInput.focus && e.key == "Enter") {
-                doUsername();
-            }
-        })
-
-        loginInput.setAttribute("maxlength", "19");
-
         function resetUsername() {
-            doUsername();
-            checkInput();
+            localStorage.removeItem("login-done");
             login.style.display = "block";
+            loginInput.focus();
+            window.location.reload();
         }
 
+        function showError() {
+            let existing = document.getElementById("login-error");
+            if (existing) return;
+
+            let div = document.createElement("div");
+            div.id = "login-error";
+            div.textContent = "Please enter a valid input";
+
+            div.style.margin = "20px auto";
+            div.style.textAlign = "center";
+            div.style.color = "black";
+            div.style.backgroundColor = "red";
+            div.style.borderRadius = "10px";
+            div.style.width = "50%";
+            div.style.height = "50px";
+            div.style.border = "5px solid black";
+            div.style.padding = "5px";
+            div.style.fontSize = "35px";
+            div.style.fontWeight = "bold";
+
+            login.appendChild(div);
+        }
 
         let inputValue = document.getElementById("login-input").value;
 
-
-        function tryLogin() {
-            let inputValue = loginInput.value.trim();
-
-
-
-            if (inputValue !== "") {
-                localStorage.setItem("username", inputValue);
-                localStorage.setItem("login-done", "true");
-                login.style.display = "none";
-            }
-        }
+        window.onload = loginInput.focus();
 
         function doUsername() {
 
+            function tryLogin() {
+                let inputValue = loginInput.value.trim();
 
-            tryLogin();
+                if (inputValue !== "") {
+                    localStorage.setItem("username", inputValue);
+                    localStorage.setItem("login-done", "true");
 
-
-        }
-
-        function checkInput() {
+                    loginInput.value = "";
+                    login.style.display = "none";
+                } else {
+                    showError();
+                }
+            }
 
 
             loginInput.addEventListener("keydown", function (e) {
                 if (e.key === "Enter") tryLogin();
             });
 
-            if (!localStorage.getItem("login-done")) {
-                login.style.display = "block";
-                window.onload = doUsername;
-            }
 
-            else {
-                login.style.display = "none";
-            }
+            loginInput.addEventListener("keyup", function (e) {
+                if (e.key === "Enter") tryLogin();
+            });
 
+
+            loginInput.addEventListener("change", tryLogin);
         }
 
         if (!localStorage.getItem("login-done")) {
-
-            window.onload = doUsername;
-            window.onload = checkInput;
-
+            login.style.display = "block";
+            doUsername();
         }
 
+        else {
+            login.style.display = "none";
+        }
 
 
 
@@ -499,21 +480,31 @@
                     if (data.id === myId) return;
 
                     logMessage(data.text, "server");
+
+                    if (document.hidden) {
+
+                    const ding = new Audio("ding.mp3");
+                    ding.volume = 0.5;
+
+                    Notify("Something happened", data.text, 3000);
+
+                    ding.play().catch(() => {});
+                    
+
+                }
                 } catch {
                     logMessage("Failed to decrypt message", "system");
                 }
 
-                if (document.hidden) {
-                    sendOSNotification("Someone sent a message!")
-                }
-            };
+                
 
-            socket.onclose = () => {
-                clearInterval(heartbeat);
-                document.getElementById("status").textContent = "🔴 Disconnected";
-                logMessage("Disconnected — retrying in 3s", "system");
-                setTimeout(start, 3000);
-            };
+                socket.onclose = () => {
+                    clearInterval(heartbeat);
+                    document.getElementById("status").textContent = "🔴 Disconnected";
+                    logMessage("Disconnected — retrying in 3s", "system");
+                    setTimeout(start, 3000);
+                };
+            }
         }
 
         start();
