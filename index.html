@@ -372,7 +372,7 @@
 
             /* VOLUME INPUT */
             #volume {
-                width: 40%;
+                width: 50%;
                 font-size: 14px;
             }
 
@@ -437,34 +437,38 @@
         let theVol = 0.5;
 
         const volume = document.getElementById("volume");
-
         const check = document.getElementById("check");
 
         function doVolume() {
+            const v = parseFloat(volume.value);
+            const vol = volume.value;
 
-            v = parseFloat(volume.value);
-
-            let vol = volume.value;
-
-            if (!isNaN(v) && v >= 0 && v <= 1 && !vol == "") {
-                theVol = v; check.textContent = "✔";
+            if (!isNaN(v) && v >= 0 && v <= 1 && vol !== "") {
+                theVol = v;
+                check.textContent = "✔";
+            } else {
+                theVol = 0.5;
+                check.textContent = "❌";
             }
-
-            else {
-                theVol = 0.5; check.textContent = "❌";
-            }
-
-
         }
 
-        volume.addEventListener("keyup", function (e) {
+        function updateVolume() {
+            // You can keep this if you need it later
+            const value = Number(volume.value);
+        }
 
-            let volume = document.getElementById("check");
+        // Normal change/input listeners
+        volume.addEventListener("input", updateVolume);
+        volume.addEventListener("change", updateVolume);
 
+        // Mobile-friendly Enter listener
+        volume.addEventListener("keydown", function (e) {
             if (e.key === "Enter") {
+                e.preventDefault();   // helps mobile commit the value
+                volume.blur();        // forces mobile to finalize input
                 doVolume();
             }
-        })
+        });
 
         function openSide() {
             const btn = document.getElementById("sideButton");
