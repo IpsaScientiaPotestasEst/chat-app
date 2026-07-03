@@ -339,7 +339,7 @@
                 top: 60px;
                 left: 0px;
                 height: calc(100dvh - 60px - 95px);
-                width: 50vw !important;
+                width: 50vw;
                 /* ← FORCE half‑screen width */
                 overflow: hidden;
                 background: #333;
@@ -350,7 +350,7 @@
             /* SIDEBAR CONTENT */
             #sideBar {
                 height: calc(100dvh - 60px - 95px);
-                width: 100% !important;
+                width: 50vw;
                 /* ← match wrapper */
                 padding: 10px;
                 overflow-y: auto;
@@ -360,7 +360,7 @@
             /* SIDEBAR TOGGLE BUTTON */
             #sideButton {
                 position: fixed;
-                left: 50vw !important;
+                left: 50vw;
                 /* ← align with new width */
                 top: 50%;
                 transform: translateY(-50%);
@@ -473,40 +473,71 @@
             const check = document.getElementById("check");
             const volume = document.getElementById("volume");
 
-            sideBar.style.width = "0.5%";
+            // Detect mobile
+            const isMobile = window.innerWidth <= 600;
+
+            // Mobile widths
+            const mobileSidebarWidth = window.innerWidth * 0.5;   // 50% of phone
+            const mobileWrapWidth = mobileSidebarWidth;           // same
+
+            // Desktop widths (your original)
+            const desktopSidebarWidth = "20%";
+            const desktopWrapWidth = "28%";
+            const desktopButtonLeft = "24%";
+
+            // Initial CLOSED state
+            sideBar.style.width = "0";
             sideBar.style.display = "none";
-            warp.style.width = "0%";
+            warp.style.width = "0";
             btn.style.left = "0";
             warp.style.borderRight = "none";
             btn.textContent = ">";
             localStorage.setItem("in", true);
 
             btn.addEventListener("click", function () {
-                if (!localStorage.getItem("in")) {
-                    sideBar.style.width = "0.5%";
-                    localStorage.setItem("in", true);
-                    btn.textContent = ">";
-                    sideBar.style.display = "none"
-                    warp.style.width = "0%";
-                    btn.style.left = "0"
+
+                if (localStorage.getItem("in")) {
+                    // Currently CLOSED → OPEN it
+
+                    if (isMobile) {
+                        // MOBILE OPEN
+                        sideBar.style.width = mobileSidebarWidth + "px";
+                        warp.style.width = mobileWrapWidth + "px";
+                        btn.style.left = mobileWrapWidth + "px";
+                    } else {
+                        // DESKTOP OPEN
+                        sideBar.style.width = desktopSidebarWidth;
+                        warp.style.width = desktopWrapWidth;
+                        btn.style.left = desktopButtonLeft;
+                    }
+
+                    sideBar.style.display = "block";
+                    warp.style.borderRight = "1px solid white";
+                    btn.textContent = "<";
+                    btn.style.transition = "1s ease";
+
+                    localStorage.removeItem("in");
+
+                } else {
+                    // Currently OPEN → CLOSE it
+
+                    sideBar.style.width = "0";
+                    sideBar.style.display = "none";
+                    warp.style.width = "0";
+                    btn.style.left = "0";
                     warp.style.borderRight = "none";
-                    btn.style.transition = "0.5s ease"
+                    btn.textContent = ">";
+                    btn.style.transition = "0.5s ease";
+
                     check.textContent = "";
                     volume.textContent = "";
 
-                } else {
-                    sideBar.style.width = "20%";
-                    localStorage.removeItem("in");
-                    btn.textContent = "<";
-                    sideBar.style.display = "block";
-                    warp.style.width = "28%";
-                    btn.style.left = "24%";
-                    warp.style.borderRight = "1px solid white";
-                    btn.style.transition = "1s ease"
+                    localStorage.setItem("in", true);
                 }
             });
-
         }
+
+
 
 
         openSide();
