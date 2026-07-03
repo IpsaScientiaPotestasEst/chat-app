@@ -273,25 +273,28 @@
 
         @media (max-width: 600px) {
 
-
+            /* Prevent weird scrolling */
             html,
             body {
-                overflow: hidden;
                 height: 100%;
+                overflow: hidden;
             }
 
+            /* Header */
             header {
-                padding: 6px 10px;
-                font-size: 14px;
-                height: 48px;
-                line-height: 48px;
+                height: 55px;
+                padding: 8px 10px;
+                font-size: 15px;
+                line-height: 55px;
             }
 
-
+            /* Main chat log area */
             #log {
                 position: fixed;
-                top: 48px;
-                bottom: 92px;
+                top: 55px;
+                /* EXACT header height */
+                bottom: 95px;
+                /* EXACT footer height */
                 left: 0;
                 right: 0;
                 padding: 10px;
@@ -303,16 +306,18 @@
                 font-size: 14px;
             }
 
-
+            /* Footer */
             footer {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
+                height: 95px;
+                /* consistent height */
                 padding: 10px;
+                display: flex;
                 flex-direction: column;
                 gap: 6px;
-                height: 92px;
                 background: #1a1a1a;
                 border-top: 2px solid #333;
             }
@@ -323,29 +328,34 @@
                 font-size: 14px;
             }
 
-
+            /* Sidebar wrapper */
             #wrapSide {
                 position: fixed;
-                top: 48px;
-                bottom: 92px;
+                top: 55px;
+                /* SAME as log top */
+                bottom: 95px;
+                /* SAME as log bottom */
                 width: 0;
+                /* collapsed by default */
                 left: 0;
                 overflow: hidden;
-                border: none;
                 background: #333;
                 transition: 0.4s ease;
             }
 
+            /* Sidebar content */
             #sideBar {
                 position: fixed;
-                top: 48px;
-                bottom: 92px;
+                top: 55px;
+                bottom: 95px;
                 width: 75%;
+                /* correct mobile width */
                 padding: 10px;
                 overflow-y: auto;
                 background: #333;
             }
 
+            /* Sidebar toggle button */
             #sideButton {
                 position: fixed;
                 left: 0;
@@ -355,19 +365,19 @@
                 z-index: 100000;
             }
 
-
+            /* Volume input */
             #volume {
                 width: 100%;
                 font-size: 14px;
             }
 
-
+            /* Login screen */
             #login-header {
                 font-size: 28px;
             }
 
             #login-input {
-                width: 60%;
+                width: 70%;
                 font-size: 18px;
             }
         }
