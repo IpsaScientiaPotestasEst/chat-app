@@ -274,8 +274,10 @@
         @media (max-width: 600px) {
 
 
-            html,body{
-                overflow: scroll;
+            html,
+            body {
+                overflow: hidden;
+                height: 100%;
             }
 
             header {
@@ -288,12 +290,17 @@
 
             #log {
                 position: fixed;
-                top: 65px;
+                top: 48px;
                 bottom: 92px;
                 left: 0;
                 right: 0;
                 padding: 10px;
                 overflow-y: auto;
+            }
+
+            .msg {
+                max-width: 95%;
+                font-size: 14px;
             }
 
 
@@ -319,29 +326,30 @@
 
             #wrapSide {
                 position: fixed;
-                top: 46px;
-                bottom: 50%;
-                width: 40%;
+                top: 48px;
+                bottom: 92px;
+                width: 0;
                 left: 0;
                 overflow: hidden;
                 border: none;
+                background: #333;
+                transition: 0.4s ease;
             }
-
 
             #sideBar {
                 position: fixed;
                 top: 48px;
-                bottom: 50%;
-                width: 100%;
+                bottom: 92px;
+                width: 75%;
                 padding: 10px;
                 overflow-y: auto;
+                background: #333;
             }
-
 
             #sideButton {
                 position: fixed;
-                left: 80%;
-                bottom: 45%;
+                left: 0;
+                bottom: 50%;
                 font-size: 22px;
                 padding: 6px 8px;
                 z-index: 100000;
