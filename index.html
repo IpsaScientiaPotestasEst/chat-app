@@ -476,11 +476,11 @@
             // Detect mobile
             const isMobile = window.innerWidth <= 600;
 
-            // Mobile widths
-            const mobileSidebarWidth = window.innerWidth * 0.5;   // 50% of phone
-            const mobileWrapWidth = mobileSidebarWidth;           // same
+            // MOBILE WIDTHS (75% of screen)
+            const mobileSidebarWidth = window.innerWidth * 0.75;   // ← 75%
+            const mobileWrapWidth = mobileSidebarWidth;            // same
 
-            // Desktop widths (your original)
+            // DESKTOP WIDTHS (your original)
             const desktopSidebarWidth = "20%";
             const desktopWrapWidth = "28%";
             const desktopButtonLeft = "24%";
@@ -497,10 +497,10 @@
             btn.addEventListener("click", function () {
 
                 if (localStorage.getItem("in")) {
-                    // Currently CLOSED → OPEN it
+                    // Currently CLOSED → OPEN
 
                     if (isMobile) {
-                        // MOBILE OPEN
+                        // MOBILE OPEN (75%)
                         sideBar.style.width = mobileSidebarWidth + "px";
                         warp.style.width = mobileWrapWidth + "px";
                         btn.style.left = mobileWrapWidth + "px";
@@ -519,7 +519,7 @@
                     localStorage.removeItem("in");
 
                 } else {
-                    // Currently OPEN → CLOSE it
+                    // Currently OPEN → CLOSE
 
                     sideBar.style.width = "0";
                     sideBar.style.display = "none";
@@ -537,11 +537,7 @@
             });
         }
 
-
-
-
         openSide();
-
 
 
         function enableNotifications() {
