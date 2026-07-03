@@ -307,34 +307,47 @@
 
         @media (max-width: 600px) {
 
+
+            html,
+            body {
+                overflow: hidden;
+                height: 100%;
+            }
+
+
             header {
-                padding: 8px;
+                height: 50px;
+                padding: 6px 10px;
                 font-size: 14px;
             }
 
-            header .center {
-                font-size: 12px;
-            }
 
             #log {
+                position: fixed;
+                top: 50px;
+                bottom: 80px;
                 left: 0;
                 right: 0;
-                top: 55px;
-                bottom: 90px;
-                padding: 10px;
+                padding: 8px;
+                overflow-y: auto;
             }
 
+
             .msg {
-                max-width: 100%;
+                max-width: 95%;
                 font-size: 14px;
             }
 
 
             footer {
-                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
                 flex-direction: column;
                 gap: 6px;
                 padding: 8px;
+                border-top: 2px solid #333;
             }
 
             footer input {
@@ -350,63 +363,53 @@
 
 
             #wrapSide {
-                width: 0;
                 position: fixed;
-                top: 55px;
-                bottom: 90px;
+                top: 50px;
+                bottom: 80px;
+                width: 0;
                 left: 0;
-                border-right: none;
-                border-top: none;
-                border-bottom: none;
+                border: none;
+                overflow: hidden;
             }
 
             #sideBar {
-                top: 55px;
-                bottom: 90px;
-                width: 70%;
-                padding: 8px;
+                width: 75%;
+                top: 50px;
+                bottom: 80px;
+                padding: 10px;
             }
+
+            #sideButton {
+                left: 0;
+                bottom: 45%;
+                font-size: 22px;
+                padding: 6px 8px;
+            }
+
 
             #volume {
                 width: 100%;
                 font-size: 14px;
             }
 
-            #sideButton {
-                left: 0;
-                bottom: 40%;
-                font-size: 22px;
-                padding: 6px 8px;
+
+            #login-header {
+                font-size: 28px;
+            }
+
+            #login-input {
+                width: 80%;
+                font-size: 18px;
             }
         }
 
 
-
-        @media (min-width: 601px) and (max-width: 900px) {
-
-            #log {
-                left: 10px;
-                right: 0;
-            }
-
-            #wrapSide {
-                width: 20%;
-            }
-
-            #sideBar {
-                width: 18%;
-            }
-
-            #sideButton {
-                left: 18%;
-            }
+        #check {
+            color: lime;
+            float: right;
         }
 
         
-        #check{
-            color: lime; float: right; 
-        }
-
     </style>
 
 </head>
@@ -450,6 +453,7 @@
         <input id="msg" placeholder="Type a message">
         <button onclick="send()" id="button">Send</button>
         <button onclick="resetUsername()" id="click">Username</button>
+        <a href="Log Info.html"></a>
     </footer>
 
     <script>
@@ -467,22 +471,22 @@
             let vol = volume.value;
 
             if (!isNaN(v) && v >= 0 && v <= 1 && !vol == "") {
-                theVol = v; check.textContent="✔"; 
+                theVol = v; check.textContent = "✔";
             }
 
             else {
-                theVol = 0.5; check.textContent="❌"; 
+                theVol = 0.5; check.textContent = "❌";
             }
 
-            
+
         }
 
         volume.addEventListener("keyup", function (e) {
-            
+
             let volume = document.getElementById("check");
 
             if (e.key === "Enter") {
-                doVolume(); 
+                doVolume();
             }
         })
 
@@ -511,8 +515,8 @@
                     btn.style.left = "0"
                     warp.style.borderRight = "none";
                     btn.style.transition = "0.5s ease"
-                    check.textContent="";
-                    volume.textContent="";
+                    check.textContent = "";
+                    volume.textContent = "";
 
                 } else {
                     sideBar.style.width = "20%";
