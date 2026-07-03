@@ -183,26 +183,7 @@
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
         }
 
-        @media (max-width: 600px) {
-
-            #login-input {
-                width: 200px;
-                max-width: 400px;
-                padding: 12px;
-                font-size: 20px;
-                border-radius: 8px;
-                border: 2px solid #222;
-                background-color: #000;
-                color: white;
-                transition: 0.2s ease;
-            }
-
-            #login-input:focus {
-                border-color: #4caf50;
-                box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
-            }
-
-        }
+        
 
 
         header {
@@ -234,26 +215,6 @@
 
         header .right {
             text-align: right;
-        }
-
-        @media (max-width: 600px) {
-
-            footer {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            footer input {
-                width: 300px;
-                font-size: 16px;
-            }
-
-            footer button {
-                width: 50%;
-                font-size: 16px;
-                padding: 12px;
-            }
         }
 
 
@@ -408,8 +369,6 @@
             color: lime;
             float: right;
         }
-
-        
     </style>
 
 </head>
@@ -453,7 +412,7 @@
         <input id="msg" placeholder="Type a message">
         <button onclick="send()" id="button">Send</button>
         <button onclick="resetUsername()" id="click">Username</button>
-        <a href="Log Info.html"></a>
+        <a href="Log Info.html" target="_blank">Log Info</a>
     </footer>
 
     <script>
