@@ -334,23 +334,24 @@
                 font-size: 14px;
             }
 
-            /* SIDEBAR WRAPPER */
             #wrapSide {
                 position: fixed;
                 top: 60px;
                 left: 0px;
                 height: calc(100dvh - 60px - 95px);
-                width: 50vw;
+                width: 50vw !important;
+                /* ← FORCE half‑screen width */
                 overflow: hidden;
                 background: #333;
-                transition: 0.4s ease;
+                transition: width 0.4s ease;
                 z-index: 999;
             }
 
             /* SIDEBAR CONTENT */
             #sideBar {
                 height: calc(100dvh - 60px - 95px);
-                width: 100%;
+                width: 100% !important;
+                /* ← match wrapper */
                 padding: 10px;
                 overflow-y: auto;
                 background: #333;
@@ -359,8 +360,10 @@
             /* SIDEBAR TOGGLE BUTTON */
             #sideButton {
                 position: fixed;
-                left: 5px;
+                left: 50vw !important;
+                /* ← align with new width */
                 top: 50%;
+                transform: translateY(-50%);
                 font-size: 22px;
                 padding: 6px 8px;
                 z-index: 100000;
