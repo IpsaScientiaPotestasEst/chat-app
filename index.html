@@ -273,25 +273,27 @@
 
         @media (max-width: 600px) {
 
-            /* Prevent weird scrolling */
+            /* Prevent double scrolling */
             html,
             body {
                 height: 100%;
                 overflow: hidden;
             }
 
-            /* Header */
+            /* HEADER FIX — ensures status text stays inside */
             header {
-                height: 55px;
+                height: 60px;
+                /* slightly taller to fit status */
                 padding: 8px 10px;
                 font-size: 15px;
-                line-height: 55px;
+                display: flex;
+                align-items: center;
             }
 
-            /* Main chat log area */
+            /* LOG AREA — fits perfectly between header and footer */
             #log {
                 position: fixed;
-                top: 55px;
+                top: 60px;
                 /* EXACT header height */
                 bottom: 95px;
                 /* EXACT footer height */
@@ -306,14 +308,13 @@
                 font-size: 14px;
             }
 
-            /* Footer */
+            /* FOOTER — fixed height so layout is predictable */
             footer {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
                 height: 95px;
-                /* consistent height */
                 padding: 10px;
                 display: flex;
                 flex-direction: column;
@@ -328,13 +329,13 @@
                 font-size: 14px;
             }
 
-            /* Sidebar wrapper */
+            /* SIDEBAR WRAPPER — matches log area EXACTLY */
             #wrapSide {
                 position: fixed;
-                top: 55px;
-                /* SAME as log top */
+                top: 60px;
+                /* SAME as #log top */
                 bottom: 95px;
-                /* SAME as log bottom */
+                /* SAME as #log bottom */
                 width: 0;
                 /* collapsed by default */
                 left: 0;
@@ -343,10 +344,10 @@
                 transition: 0.4s ease;
             }
 
-            /* Sidebar content */
+            /* SIDEBAR CONTENT — correct width + correct height */
             #sideBar {
                 position: fixed;
-                top: 55px;
+                top: 60px;
                 bottom: 95px;
                 width: 75%;
                 /* correct mobile width */
@@ -355,23 +356,25 @@
                 background: #333;
             }
 
-            /* Sidebar toggle button */
+            /* SIDEBAR TOGGLE BUTTON — pinned to sidebar edge */
             #sideButton {
                 position: fixed;
-                left: 0;
+                left: 75%;
+                /* EXACT right edge of sidebar */
                 bottom: 50%;
                 font-size: 22px;
                 padding: 6px 8px;
                 z-index: 100000;
+                transition: left 0.4s ease;
             }
 
-            /* Volume input */
+            /* VOLUME INPUT */
             #volume {
                 width: 100%;
                 font-size: 14px;
             }
 
-            /* Login screen */
+            /* LOGIN SCREEN */
             #login-header {
                 font-size: 28px;
             }
