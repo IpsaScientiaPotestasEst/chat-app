@@ -299,11 +299,10 @@
             /* LOG AREA — uses dynamic viewport height */
             #log {
                 position: absolute;
-                top: 60px;
+                top: 80px;
                 left: 0;
                 right: 0;
                 height: calc(100dvh - 60px - 95px);
-                /* header + footer */
                 padding: 10px;
                 overflow-y: auto;
             }
@@ -341,10 +340,10 @@
                 top: 60px;
                 left: 0;
                 height: calc(100dvh - 60px - 95px);
-                width: 0;
+                width: 50%;
                 overflow: hidden;
                 background: #333;
-                transition: width 0.4s ease;
+                transition: 0.4s ease;
                 z-index: 999;
             }
 
@@ -360,10 +359,8 @@
             /* SIDEBAR TOGGLE BUTTON */
             #sideButton {
                 position: fixed;
-                left: 0;
-                /* updated — JS will move it */
+                left: 5px;
                 top: 50%;
-                transform: translateY(-50%);
                 font-size: 22px;
                 padding: 6px 8px;
                 z-index: 100000;
