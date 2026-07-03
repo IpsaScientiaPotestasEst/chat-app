@@ -278,27 +278,32 @@
             body {
                 height: 100%;
                 overflow: hidden;
+                margin: 0;
+                padding: 0;
             }
 
-            /* HEADER FIX — ensures status text stays inside */
+            /* HEADER */
             header {
                 height: 60px;
-                /* slightly taller to fit status */
                 padding: 8px 10px;
                 font-size: 15px;
                 display: flex;
                 align-items: center;
-            }
-
-            /* LOG AREA — fits perfectly between header and footer */
-            #log {
                 position: fixed;
-                top: 60px;
-                /* EXACT header height */
-                bottom: 95px;
-                /* EXACT footer height */
+                top: 0;
                 left: 0;
                 right: 0;
+                z-index: 1000;
+            }
+
+            /* LOG AREA — uses dynamic viewport height */
+            #log {
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                height: calc(100dvh - 60px - 95px);
+                /* header + footer */
                 padding: 10px;
                 overflow-y: auto;
             }
@@ -308,7 +313,7 @@
                 font-size: 14px;
             }
 
-            /* FOOTER — fixed height so layout is predictable */
+            /* FOOTER */
             footer {
                 position: fixed;
                 bottom: 0;
@@ -321,6 +326,7 @@
                 gap: 6px;
                 background: #1a1a1a;
                 border-top: 2px solid #333;
+                z-index: 1000;
             }
 
             footer input,
@@ -329,39 +335,35 @@
                 font-size: 14px;
             }
 
-            /* SIDEBAR WRAPPER — matches log area EXACTLY */
+            /* SIDEBAR WRAPPER */
             #wrapSide {
                 position: fixed;
                 top: 60px;
-                /* SAME as #log top */
-                bottom: 95px;
-                /* SAME as #log bottom */
-                width: 0;
-                /* collapsed by default */
                 left: 0;
+                height: calc(100dvh - 60px - 95px);
+                width: 0;
                 overflow: hidden;
                 background: #333;
-                transition: 0.4s ease;
+                transition: width 0.4s ease;
+                z-index: 999;
             }
 
-            /* SIDEBAR CONTENT — correct width + correct height */
+            /* SIDEBAR CONTENT */
             #sideBar {
-                position: fixed;
-                top: 60px;
-                bottom: 95px;
+                height: calc(100dvh - 60px - 95px);
                 width: 75%;
-                /* correct mobile width */
                 padding: 10px;
                 overflow-y: auto;
                 background: #333;
             }
 
-            /* SIDEBAR TOGGLE BUTTON — pinned to sidebar edge */
+            /* SIDEBAR TOGGLE BUTTON */
             #sideButton {
                 position: fixed;
-                left: 75%;
-                /* EXACT right edge of sidebar */
-                bottom: 50%;
+                left: 0;
+                /* updated — JS will move it */
+                top: 50%;
+                transform: translateY(-50%);
                 font-size: 22px;
                 padding: 6px 8px;
                 z-index: 100000;
