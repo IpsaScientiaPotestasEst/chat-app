@@ -183,7 +183,7 @@
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
         }
 
-        
+
 
 
         header {
@@ -266,37 +266,30 @@
             background-color: #000000d2;
         }
 
+        #check {
+            color: lime;
+            float: right;
+        }
+
         @media (max-width: 600px) {
 
 
-            html,
-            body {
-                overflow: hidden;
-                height: 100%;
-            }
-
-
             header {
-                height: 50px;
                 padding: 6px 10px;
                 font-size: 14px;
+                height: 48px;
+                line-height: 48px;
             }
 
 
             #log {
                 position: fixed;
-                top: 50px;
-                bottom: 80px;
+                top: 48px;
+                bottom: 92px;
                 left: 0;
                 right: 0;
-                padding: 8px;
+                padding: 10px;
                 overflow-y: auto;
-            }
-
-
-            .msg {
-                max-width: 95%;
-                font-size: 14px;
             }
 
 
@@ -305,46 +298,49 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
+                padding: 10px;
                 flex-direction: column;
                 gap: 6px;
-                padding: 8px;
+                height: 92px;
+                background: #1a1a1a;
                 border-top: 2px solid #333;
             }
 
-            footer input {
-                width: 100%;
-                font-size: 14px;
-            }
-
+            footer input,
             footer button {
                 width: 100%;
                 font-size: 14px;
-                padding: 10px;
             }
 
 
             #wrapSide {
                 position: fixed;
-                top: 50px;
-                bottom: 80px;
+                top: 48px;
+                bottom: 92px;
                 width: 0;
                 left: 0;
-                border: none;
                 overflow: hidden;
+                border: none;
             }
+
 
             #sideBar {
+                position: fixed;
+                top: 48px;
+                bottom: 92px;
                 width: 75%;
-                top: 50px;
-                bottom: 80px;
                 padding: 10px;
+                overflow-y: auto;
             }
 
+
             #sideButton {
+                position: fixed;
                 left: 0;
                 bottom: 45%;
                 font-size: 22px;
                 padding: 6px 8px;
+                z-index: 100000;
             }
 
 
@@ -362,12 +358,6 @@
                 width: 80%;
                 font-size: 18px;
             }
-        }
-
-
-        #check {
-            color: lime;
-            float: right;
         }
     </style>
 
