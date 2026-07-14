@@ -570,16 +570,15 @@
                     logMessage("Failed to decrypt message", "system");
                 }
 
+            }
+        }
 
-
-                socket.onclose = () => {
+        socket.onclose = () => {
                     clearInterval(heartbeat);
                     document.getElementById("status").textContent = "🔴 Disconnected";
                     logMessage("Disconnected — retrying in 3s", "system");
                     setTimeout(start, 3000);
                 };
-            }
-        }
 
         start();
 
