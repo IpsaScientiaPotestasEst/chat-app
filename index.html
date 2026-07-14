@@ -374,7 +374,7 @@
 
             if (document.visibilityState === "hidden" && Notification.permission === "granted") {
 
-               playDing()
+                playDing()
 
                 let note = new Notification(msg, {
                     body: other,
@@ -567,6 +567,12 @@
             return;
         }
 
+        const data = JSON.parse(decrypted);
+        
+        if (document.hidden) {
+                Notify("Someone sent a message",data.text,2000)
+            }
+
         try {
             const decrypted = await decryptMessage(event.data);
             const data = JSON.parse(decrypted);
@@ -575,9 +581,6 @@
 
             logMessage(data.text, "server");
 
-            if (document.hidden) {
-                Notify("Someone sent a message",data.text,2000)
-            }
 
         } catch {
             logMessage("Failed to decrypt message", "system");
