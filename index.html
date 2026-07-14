@@ -537,8 +537,10 @@
         }
 
         function start() {
-   
-    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+    if (socket && (
+        socket.readyState === WebSocket.OPEN ||
+        socket.readyState === WebSocket.CONNECTING
+    )) {
         return;
     }
 
@@ -547,28 +549,12 @@
     socket.onopen = () => {
         document.getElementById("status").textContent = "🟢 Connected";
         logMessage("Connected to server", "system");
-
-        heartbeat = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) socket.send("ping");
-        }, 30000);
     };
 
     socket.onmessage = async (event) => {
         if (event.data === "pong") return;
 
-        // If tab is hidden, just notify (no decrypt to avoid corruption)
-        if (document.hidden) {
-            Notify("Someone sent a message", "New message received", 3000);
-
-            let ding = new Audio("ding.mp3");
-            ding.volume = theVol;
-            ding.play();
-
-            return;
-        }
-
         if (!looksEncrypted(event.data)) {
-            logMessage("Received non-encrypted message: " + event.data, "system");
             return;
         }
 
@@ -579,6 +565,7 @@
             if (data.id === myId) return;
 
             logMessage(data.text, "server");
+
         } catch {
             logMessage("Failed to decrypt message", "system");
         }
@@ -586,12 +573,18 @@
 
     socket.onclose = () => {
         clearInterval(heartbeat);
+
         document.getElementById("status").textContent = "🔴 Disconnected";
-        logMessage("Disconnected — retrying in 3s", "system");
+
         setTimeout(start, 3000);
     };
-}
 
+    heartbeat = setInterval(() => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send("ping");
+        }
+    }, 30000);
+}
         
         start();
 
