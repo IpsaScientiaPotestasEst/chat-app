@@ -537,58 +537,60 @@
         }
 
         function start() {
-            socket = new WebSocket("wss://chat-server-r42a.onrender.com");
-
-            socket.onopen = () => {
-                document.getElementById("status").textContent = "🟢 Connected";
-                logMessage("Connected to server", "system");
-
-                heartbeat = setInterval(() => {
-                    if (socket.readyState === WebSocket.OPEN) socket.send("ping");
-                }, 30000);
-            };
-
-            socket.onmessage = async (event) => {
-    if (event.data === "pong") return;
-
-    // If hidden → DO NOT decrypt (messages may be corrupted)
-    if (document.hidden) {
-        Notify("Someone sent a message", "New message received", 3000);
-
-        let ding = new Audio("ding.mp3");
-        ding.volume = theVol;
-        ding.play();
-
-        return; // Stop here — do NOT decrypt
-    }
-
-    // If visible → decrypt safely
-    if (!looksEncrypted(event.data)) {
-        logMessage("Received non-encrypted message: " + event.data, "system");
+   
+    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
         return;
     }
 
-    try {
-        const decrypted = await decryptMessage(event.data);
-        const data = JSON.parse(decrypted);
+    socket = new WebSocket("wss://chat-server-r42a.onrender.com");
 
-        if (data.id === myId) return;
+    socket.onopen = () => {
+        document.getElementById("status").textContent = "🟢 Connected";
+        logMessage("Connected to server", "system");
 
-        logMessage(data.text, "server");
+        heartbeat = setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) socket.send("ping");
+        }, 30000);
+    };
 
-    } catch {
-        logMessage("Failed to decrypt message", "system");
-    }
-};
+    socket.onmessage = async (event) => {
+        if (event.data === "pong") return;
 
-            socket.onclose = () => {
-                    clearInterval(heartbeat);
-                    document.getElementById("status").textContent = "🔴 Disconnected";
-                    logMessage("Disconnected — retrying in 3s", "system");
-                    setTimeout(start, 3000);
-                };
+        // If tab is hidden, just notify (no decrypt to avoid corruption)
+        if (document.hidden) {
+            Notify("Someone sent a message", "New message received", 3000);
 
+            let ding = new Audio("ding.mp3");
+            ding.volume = theVol;
+            ding.play();
+
+            return;
         }
+
+        if (!looksEncrypted(event.data)) {
+            logMessage("Received non-encrypted message: " + event.data, "system");
+            return;
+        }
+
+        try {
+            const decrypted = await decryptMessage(event.data);
+            const data = JSON.parse(decrypted);
+
+            if (data.id === myId) return;
+
+            logMessage(data.text, "server");
+        } catch {
+            logMessage("Failed to decrypt message", "system");
+        }
+    };
+
+    socket.onclose = () => {
+        clearInterval(heartbeat);
+        document.getElementById("status").textContent = "🔴 Disconnected";
+        logMessage("Disconnected — retrying in 3s", "system");
+        setTimeout(start, 3000);
+    };
+}
 
         
         start();
