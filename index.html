@@ -549,37 +549,37 @@
             };
 
             socket.onmessage = async (event) => {
-                if (event.data === "pong") return;
+    if (event.data === "pong") return;
 
-                if (!looksEncrypted(event.data)) {
-                    logMessage("Received non-encrypted message: " + event.data, "system");
-                    return;
-                }
+    // If hidden → DO NOT decrypt (messages may be corrupted)
+    if (document.hidden) {
+        Notify("Someone sent a message", "New message received", 3000);
 
-                try {
-                    const decrypted = await decryptMessage(event.data);
-                    const data = JSON.parse(decrypted);
+        let ding = new Audio("ding.mp3");
+        ding.volume = theVol;
+        ding.play();
 
-                    if (data.id === myId) return;
+        return; // Stop here — do NOT decrypt
+    }
 
-                    logMessage(data.text, "server");
+    // If visible → decrypt safely
+    if (!looksEncrypted(event.data)) {
+        logMessage("Received non-encrypted message: " + event.data, "system");
+        return;
+    }
 
-                    if (document.hidden) {
+    try {
+        const decrypted = await decryptMessage(event.data);
+        const data = JSON.parse(decrypted);
 
-                        let ding = new Audio("ding.mp3");
-                        ding.volume = theVol;
+        if (data.id === myId) return;
 
-                        Notify("Someone sent a message", data.text, 3000);
+        logMessage(data.text, "server");
 
-                        ding.play();
-
-
-                    }
-                } catch {
-                    logMessage("Failed to decrypt message", "system");
-                }
-
-            }
+    } catch {
+        logMessage("Failed to decrypt message", "system");
+    }
+};
 
             socket.onclose = () => {
                     clearInterval(heartbeat);
@@ -592,6 +592,14 @@
 
         
         start();
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                try { socket.close(); } catch {}
+            } else {
+                start(); 
+            }
+        });
 
         async function send() {
             const input = document.getElementById("msg");
