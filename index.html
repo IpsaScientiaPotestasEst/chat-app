@@ -532,6 +532,10 @@
             log.scrollTop = log.scrollHeight;
         }
 
+        function looksEncrypted(str) {
+            return /^[A-Za-z0-9+/]+=*$/.test(str);
+        }
+
         function start() {
             socket = new WebSocket("wss://chat-server-r42a.onrender.com");
 
@@ -546,6 +550,11 @@
 
             socket.onmessage = async (event) => {
                 if (event.data === "pong") return;
+
+                if (!looksEncrypted(event.data)) {
+                    logMessage("Received non-encrypted message: " + event.data, "system");
+                    return;
+                }
 
                 try {
                     const decrypted = await decryptMessage(event.data);
