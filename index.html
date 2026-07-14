@@ -361,11 +361,20 @@
         }
 
 
+        let theVol = 1.0;
+
+        function playDing() {
+        let ding = new Audio("ding.mp3");
+        ding.volume = theVol;
+        ding.play();
+        }
+
+
         function Notify(msg, other, duration = 5000) {
 
             if (document.visibilityState === "hidden" && Notification.permission === "granted") {
 
-
+               playDing()
 
                 let note = new Notification(msg, {
                     body: other,
@@ -565,6 +574,10 @@
             if (data.id === myId) return;
 
             logMessage(data.text, "server");
+
+            if (document.hidden) {
+                Notify("Someone sent a message",data.text,2000)
+            }
 
         } catch {
             logMessage("Failed to decrypt message", "system");
