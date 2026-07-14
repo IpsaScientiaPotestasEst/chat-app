@@ -218,54 +218,6 @@
         }
 
 
-
-
-        #sideBar {
-            position: fixed;
-            top: 60px;
-            bottom: 65px;
-            left: 0;
-            width: 20%;
-            background-color: #333;
-            z-index: 9999;
-            overflow-y: auto;
-            padding: 10px;
-            transition: 0.5s ease;
-        }
-
-        #sideButton {
-            width: 5px;
-            position: fixed;
-            bottom: 50%;
-            left: 24%;
-            z-index: 100000;
-            color: rgb(255, 140, 0);
-            font-size: 25px;
-            padding: 3px 3px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        #wrapSide {
-            background-color: #333;
-            height: 100%;
-            width: 28%;
-            left: 0;
-            z-index: 9999;
-            border-right: 1px solid white;
-            border-bottom: 1px solid white;
-            border-top: 1px solid white;
-            transition: 0.5s ease;
-        }
-
-        #wrapSide>#volume {
-            width: 70%;
-        }
-
-        #volume {
-            background-color: #000000d2;
-        }
-
         #check {
             color: lime;
             float: right;
@@ -334,47 +286,7 @@
                 font-size: 14px;
             }
 
-            #wrapSide {
-                position: fixed;
-                top: 60px;
-                left: 0px;
-                height: calc(100dvh - 60px - 95px);
-                width: 50vw;
-                /* ← FORCE half‑screen width */
-                overflow: hidden;
-                background: #333;
-                transition: width 0.4s ease;
-                z-index: 999;
-            }
-
-            /* SIDEBAR CONTENT */
-            #sideBar {
-                height: calc(100dvh - 60px - 95px);
-                width: 50vw;
-                /* ← match wrapper */
-                padding: 10px;
-                overflow-y: auto;
-                background: #333;
-            }
-
-            /* SIDEBAR TOGGLE BUTTON */
-            #sideButton {
-                position: fixed;
-                left: 50vw;
-                /* ← align with new width */
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 22px;
-                padding: 6px 8px;
-                z-index: 100000;
-                transition: left 0.4s ease;
-            }
-
-            /* VOLUME INPUT */
-            #volume {
-                width: 50%;
-                font-size: 14px;
-            }
+            
 
             /* LOGIN SCREEN */
             #login-header {
@@ -410,17 +322,6 @@
         <input id="login-input" type="input" placeholder="Enter a username:">
     </div>
 
-    <div id="wrapSide">
-
-        <div id="sideBar">
-            <input type="text" placeholder="Volume (0.1 to 1):" id="volume">
-            <div id="check"></div>
-
-        </div>
-
-        <p id="sideButton">
-            << /p>
-
     </div>
 
 
@@ -434,114 +335,7 @@
 
     <script>
 
-        let theVol = 0.5;
 
-        const volume = document.getElementById("volume");
-        const check = document.getElementById("check");
-
-        function doVolume() {
-            const v = parseFloat(volume.value);
-            const vol = volume.value;
-
-            if (!isNaN(v) && v >= 0 && v <= 1 && vol !== "") {
-                theVol = v;
-                check.textContent = "✔";
-            } else {
-                theVol = 0.5;
-                check.textContent = "❌";
-            }
-        }
-
-        function updateVolume() {
-            // You can keep this if you need it later
-            const value = Number(volume.value);
-        }
-
-        // Normal change/input listeners
-        volume.addEventListener("input", updateVolume);
-        volume.addEventListener("change", updateVolume);
-
-        // Mobile-friendly Enter listener
-        volume.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();   // helps mobile commit the value
-                volume.blur();        // forces mobile to finalize input
-                doVolume();
-            }
-        });
-
-        function openSide() {
-            const btn = document.getElementById("sideButton");
-            const sideBar = document.getElementById("sideBar");
-            const warp = document.getElementById("wrapSide");
-            const check = document.getElementById("check");
-            const volume = document.getElementById("volume");
-
-            // Detect mobile
-            const isMobile = window.innerWidth <= 600;
-
-            // MOBILE WIDTHS (75% of screen)
-            const mobileSidebarWidth = window.innerWidth * 0.75;   // ← 75%
-            const mobileWrapWidth = mobileSidebarWidth;            // same
-
-            // DESKTOP WIDTHS (your original)
-            const desktopSidebarWidth = "20%";
-            const desktopWrapWidth = "28%";
-            const desktopButtonLeft = "24%";
-
-            // Initial CLOSED state
-            sideBar.style.width = "0";
-            sideBar.style.display = "none";
-            warp.style.width = "0";
-            btn.style.left = "0";
-            warp.style.borderRight = "none";
-            btn.textContent = ">";
-            localStorage.setItem("in", true);
-
-            btn.addEventListener("click", function () {
-
-                if (localStorage.getItem("in")) {
-                    // Currently CLOSED → OPEN
-
-                    if (isMobile) {
-                        // MOBILE OPEN (75%)
-                        sideBar.style.width = mobileSidebarWidth + "px";
-                        warp.style.width = mobileWrapWidth + "px";
-                        btn.style.left = mobileWrapWidth + "px";
-                    } else {
-                        // DESKTOP OPEN
-                        sideBar.style.width = desktopSidebarWidth;
-                        warp.style.width = desktopWrapWidth;
-                        btn.style.left = desktopButtonLeft;
-                    }
-
-                    sideBar.style.display = "block";
-                    warp.style.borderRight = "1px solid white";
-                    btn.textContent = "<";
-                    btn.style.transition = "1s ease";
-
-                    localStorage.removeItem("in");
-
-                } else {
-                    // Currently OPEN → CLOSE
-
-                    sideBar.style.width = "0";
-                    sideBar.style.display = "none";
-                    warp.style.width = "0";
-                    btn.style.left = "0";
-                    warp.style.borderRight = "none";
-                    btn.textContent = ">";
-                    btn.style.transition = "0.5s ease";
-
-                    check.textContent = "";
-                    volume.textContent = "";
-
-                    localStorage.setItem("in", true);
-                }
-            });
-        }
-
-        openSide();
 
 
         function enableNotifications() {
@@ -549,7 +343,6 @@
                 Notification.requestPermission();
             }
         }
-
 
 
         function Notify(msg, other, duration = 5000) {
