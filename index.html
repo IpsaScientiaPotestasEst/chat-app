@@ -604,13 +604,7 @@
         
         start();
 
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) {
-                try { socket.close(); } catch {}
-            } else {
-                start(); 
-            }
-        });
+       
 
         async function send() {
             const input = document.getElementById("msg");
