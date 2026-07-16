@@ -199,7 +199,7 @@
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
         }
 
-        #login-input:focus.show{
+        #login-input:focus.show {
             border-color: red;
         }
 
@@ -242,8 +242,6 @@
             color: lime;
             float: right;
         }
-
-        
     </style>
 
 </head>
@@ -285,6 +283,25 @@
         if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             document.body.innerHTML = "<h2>This app is not available on mobile devices.</h2>";
         }
+
+        let audioUnlocked = false;
+
+        function unlockAudio() {
+            if (audioUnlocked) return;
+
+            const a = new Audio("ding.mp3");
+            a.volume = 0.0001; // nearly silent
+            a.play().then(() => {
+                audioUnlocked = true;
+                console.log("Audio unlocked");
+            }).catch(err => {
+                console.log("Audio unlock failed:", err);
+            });
+        }
+
+        // Unlock audio on first user interaction
+        document.addEventListener("click", unlockAudio, { once: true });
+        document.addEventListener("keydown", unlockAudio, { once: true });
 
 
 
@@ -348,7 +365,7 @@
                     login.style.display = "none";
                 } else {
                     loginInput.classList.add("show");
-                    setTimeout(() => {loginInput.classList.remove("show")},1000)
+                    setTimeout(() => { loginInput.classList.remove("show") }, 1000)
                 }
             }
 
