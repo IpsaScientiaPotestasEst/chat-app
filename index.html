@@ -199,6 +199,10 @@
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
         }
 
+        #login-input:focus.show{
+            border-color: red;
+        }
+
 
 
 
@@ -239,81 +243,7 @@
             float: right;
         }
 
-        @media (max-width: 600px) {
-
-            /* Prevent double scrolling */
-            html,
-            body {
-                height: 100%;
-                overflow: hidden;
-                margin: 0;
-                padding: 0;
-            }
-
-            /* HEADER */
-            header {
-                height: 60px;
-                padding: 8px 10px;
-                font-size: 15px;
-                display: flex;
-                align-items: center;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 1000;
-            }
-
-            /* LOG AREA — uses dynamic viewport height */
-            #log {
-                position: absolute;
-                top: 80px;
-                left: 0;
-                right: 0;
-                height: calc(100dvh - 60px - 95px);
-                padding: 10px;
-                overflow-y: auto;
-            }
-
-            .msg {
-                max-width: 95%;
-                font-size: 14px;
-            }
-
-            /* FOOTER */
-            footer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 95px;
-                padding: 10px;
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-                background: #1a1a1a;
-                border-top: 2px solid #333;
-                z-index: 1000;
-            }
-
-            footer input,
-            footer button {
-                width: 100%;
-                font-size: 14px;
-            }
-
-            
-
-            /* LOGIN SCREEN */
-            #login-header {
-                font-size: 28px;
-            }
-
-            #login-input {
-                width: 70%;
-                font-size: 18px;
-            }
-        }
+        
     </style>
 
 </head>
@@ -338,12 +268,12 @@
         <input id="login-input" type="input" placeholder="Enter a username:">
     </div>
 
-    </div>
+
 
 
 
     <footer>
-        <input id="msg" placeholder="Type a message">
+        <input id="msg" placeholder="Type a message" maxlength="1000">
         <button onclick="send()" id="button">Send</button>
         <button onclick="resetUsername()" id="click">Username</button>
         <a href="Log Info.html" target="_blank">Log Info</a>
@@ -351,6 +281,10 @@
 
     <script>
 
+
+        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            document.body.innerHTML = "<h2>This app is not available on mobile devices.</h2>";
+        }
 
 
 
@@ -360,21 +294,15 @@
             }
         }
 
+        let theVol = 0.5;
 
-        let theVol = 1.0;
-
-        function playDing() {
-        let ding = new Audio("ding.mp3");
-        ding.volume = theVol;
-        ding.play();
-        }
 
 
         function Notify(msg, other, duration = 5000) {
 
             if (document.visibilityState === "hidden" && Notification.permission === "granted") {
 
-                playDing()
+
 
                 let note = new Notification(msg, {
                     body: other,
@@ -402,28 +330,6 @@
             window.location.reload();
         }
 
-        function showError() {
-            let existing = document.getElementById("login-error");
-            if (existing) return;
-
-            let div = document.createElement("div");
-            div.id = "login-error";
-            div.textContent = "Please enter a valid input";
-
-            div.style.margin = "20px auto";
-            div.style.textAlign = "center";
-            div.style.color = "black";
-            div.style.backgroundColor = "red";
-            div.style.borderRadius = "10px";
-            div.style.width = "50%";
-            div.style.height = "50px";
-            div.style.border = "5px solid black";
-            div.style.padding = "5px";
-            div.style.fontSize = "35px";
-            div.style.fontWeight = "bold";
-
-            login.appendChild(div);
-        }
 
         let inputValue = document.getElementById("login-input").value;
 
@@ -441,7 +347,8 @@
                     loginInput.value = "";
                     login.style.display = "none";
                 } else {
-                    showError();
+                    loginInput.classList.add("show");
+                    setTimeout(() => {loginInput.classList.remove("show")},1000)
                 }
             }
 
@@ -477,26 +384,34 @@
         let socket;
         let heartbeat;
 
+        let cryptoKeyPromise = null;
+
         function strToBuf(str) { return new TextEncoder().encode(str); }
         function bufToStr(buf) { return new TextDecoder().decode(buf); }
 
+        // Derive key ONCE
         async function getKey() {
-            const baseKey = await crypto.subtle.importKey(
-                "raw", strToBuf(PASSWORD), "PBKDF2", false, ["deriveKey"]
-            );
+            if (!cryptoKeyPromise) {
+                cryptoKeyPromise = (async () => {
+                    const baseKey = await crypto.subtle.importKey(
+                        "raw", strToBuf(PASSWORD), "PBKDF2", false, ["deriveKey"]
+                    );
 
-            return crypto.subtle.deriveKey(
-                {
-                    name: "PBKDF2",
-                    salt: strToBuf(SALT),
-                    iterations: 100000,
-                    hash: "SHA-256"
-                },
-                baseKey,
-                { name: "AES-GCM", length: 256 },
-                false,
-                ["encrypt", "decrypt"]
-            );
+                    return crypto.subtle.deriveKey(
+                        {
+                            name: "PBKDF2",
+                            salt: strToBuf(SALT),
+                            iterations: 100000,
+                            hash: "SHA-256"
+                        },
+                        baseKey,
+                        { name: "AES-GCM", length: 256 },
+                        false,
+                        ["encrypt", "decrypt"]
+                    );
+                })();
+            }
+            return cryptoKeyPromise;
         }
 
         async function encryptMessage(text) {
@@ -517,7 +432,17 @@
         }
 
         async function decryptMessage(base64) {
+            // Basic sanity check: must be base64-ish and at least IV+tag
+            if (typeof base64 !== "string" || !/^[A-Za-z0-9+/=]+$/.test(base64)) {
+                throw new Error("Not base64");
+            }
+
             const data = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+
+            if (data.length < 12 + 16) {
+                throw new Error("Too short to be AES-GCM");
+            }
+
             const iv = data.slice(0, 12);
             const ciphertext = data.slice(12);
 
@@ -541,70 +466,57 @@
             log.scrollTop = log.scrollHeight;
         }
 
-        function looksEncrypted(str) {
-            return /^[A-Za-z0-9+/]+=*$/.test(str);
-        }
-
         function start() {
-    if (socket && (
-        socket.readyState === WebSocket.OPEN ||
-        socket.readyState === WebSocket.CONNECTING
-    )) {
-        return;
-    }
+            socket = new WebSocket("wss://chat-server-r42a.onrender.com");
 
-    socket = new WebSocket("wss://chat-server-r42a.onrender.com");
+            socket.onopen = () => {
+                document.getElementById("status").textContent = "🟢 Connected";
+                logMessage("Connected to server", "system");
 
-    socket.onopen = () => {
-        document.getElementById("status").textContent = "🟢 Connected";
-        logMessage("Connected to server", "system");
-    };
+                heartbeat = setInterval(() => {
+                    if (socket.readyState === WebSocket.OPEN) socket.send("ping");
+                }, 30000);
+            };
 
-    socket.onmessage = async (event) => {
-        if (event.data === "pong") return;
+            socket.onmessage = async (event) => {
+                const raw = event.data;
 
-        if (!looksEncrypted(event.data)) {
-            return;
+                console.log("WS raw:", raw); // <-- watch this in DevTools
+
+                if (raw === "pong" || raw === "ping") return;
+
+                try {
+                    const decrypted = await decryptMessage(raw);
+                    console.log("Decrypted:", decrypted);
+
+                    const data = JSON.parse(decrypted);
+
+                    if (data.id === myId) return;
+
+                    logMessage(data.text, "server");
+
+                    if (document.hidden) {
+                        let ding = new Audio("ding.mp3");
+                        ding.volume = theVol;
+                        Notify("Someone sent a message", data.text);
+                        ding.play();
+                    }
+
+                } catch (err) {
+                    console.error("Decrypt error:", err);
+                    logMessage("Failed to decrypt message", "system");
+                }
+            };
+
+            socket.onclose = () => {
+                clearInterval(heartbeat);
+                document.getElementById("status").textContent = "🔴 Disconnected";
+                logMessage("Disconnected — retrying in 3s", "system");
+                setTimeout(start, 3000);
+            };
         }
 
-        const data = JSON.parse(decrypted);
-        
-        if (document.hidden) {
-                Notify("Someone sent a message",data.text,2000)
-            }
-
-        try {
-            const decrypted = await decryptMessage(event.data);
-            const data = JSON.parse(decrypted);
-
-            if (data.id === myId) return;
-
-            logMessage(data.text, "server");
-
-
-        } catch {
-            logMessage("Failed to decrypt message", "system");
-        }
-    };
-
-    socket.onclose = () => {
-        clearInterval(heartbeat);
-
-        document.getElementById("status").textContent = "🔴 Disconnected";
-
-        setTimeout(start, 3000);
-    };
-
-    heartbeat = setInterval(() => {
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send("ping");
-        }
-    }, 30000);
-}
-        
         start();
-
-       
 
         async function send() {
             const input = document.getElementById("msg");
