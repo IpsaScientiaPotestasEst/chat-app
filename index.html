@@ -252,6 +252,7 @@
         <div class="left">Maximum Chat</div>
         <div class="center">End-to-end Encrypted</div>
         <div class="right" id="status">Connecting...</div>
+        <a src="https://chat-app-call-extension.onrender.com/">Call someone?</a>
     </header>
 
 
@@ -290,7 +291,7 @@
             if (audioUnlocked) return;
 
             const a = new Audio("ding.mp3");
-            a.volume = 0.0001; // nearly silent
+            a.volume = 0.0001;
             a.play().then(() => {
                 audioUnlocked = true;
                 console.log("Audio unlocked");
@@ -299,7 +300,6 @@
             });
         }
 
-        // Unlock audio on first user interaction
         document.addEventListener("click", unlockAudio, { once: true });
         document.addEventListener("keydown", unlockAudio, { once: true });
 
@@ -410,7 +410,6 @@
         function strToBuf(str) { return new TextEncoder().encode(str); }
         function bufToStr(buf) { return new TextDecoder().decode(buf); }
 
-        // Derive key ONCE
         async function getKey() {
             if (!cryptoKeyPromise) {
                 cryptoKeyPromise = (async () => {
@@ -502,7 +501,7 @@
             socket.onmessage = async (event) => {
                 const raw = event.data;
 
-                console.log("WS raw:", raw); // <-- watch this in DevTools
+                console.log("WS raw:", raw); 
 
                 if (raw === "pong" || raw === "ping") return;
 
